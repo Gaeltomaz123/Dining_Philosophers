@@ -12,18 +12,19 @@ type Philosopher struct {
     leftFork    int
     rightFork   int
     eatCount    int
+    offset      int
 }
 
 // Função para filósofo pensar
 func (p *Philosopher) think() {
-    fmt.Printf("Filósofo %d está pensando.\n", p.id)
-    time.Sleep(time.Millisecond * 500)
+    fmt.Printf("%*sT%d\n", p.offset, "", p.eatCount+1)
+    time.Sleep(time.Duration(2) * time.Second)
 }
 
 // Função para filósofo comer
 func (p *Philosopher) eat() {
-    fmt.Printf("Filósofo %d está comendo.\n", p.id)
-    time.Sleep(time.Millisecond * 500)
+    fmt.Printf("%*sE%d\n", p.offset, "", p.eatCount+1)
+    time.Sleep(time.Duration(3) * time.Second)
     p.eatCount++
 }
 
@@ -31,7 +32,7 @@ func (p *Philosopher) eat() {
 func (p *Philosopher) dine(wg *sync.WaitGroup, forks []sync.Mutex) {
     defer wg.Done()
 
-    for i := 0; i < 3; i++ {
+    for i := 0; i < 5; i++ { // Alterar para 5 execuções
         p.think()
 
         // Filósofo pega os garfos na ordem da hierarquia de recursos
@@ -63,6 +64,9 @@ func main() {
     numPhilosophers := 5
     forks := make([]sync.Mutex, numPhilosophers)
 
+    // Definir deslocamento para formatação
+    offsetStep := 10
+
     // Criar filósofos
     philosophers := make([]Philosopher, numPhilosophers)
     for i := 0; i < numPhilosophers; i++ {
@@ -70,8 +74,16 @@ func main() {
             id:        i + 1,
             leftFork:  i,
             rightFork: (i + 1) % numPhilosophers,
+            offset:    i * offsetStep,
         }
     }
+
+    
+
+    // Exibir cabeçalho formatado
+    fmt.Printf("[P1]%*s[P2]%*s[P3]%*s[P4]%*s[P5]\n", offsetStep-4, "", offsetStep-4, "", offsetStep-4, "", offsetStep-4, "")
+
+    start := time.Now()
 
     // Iniciar filósofos
     for i := 0; i < numPhilosophers; i++ {
@@ -81,5 +93,7 @@ func main() {
 
     wg.Wait()
 
-    fmt.Println("Todos os filósofos terminaram de comer.")
+    elapsed := time.Since(start)
+
+    fmt.Printf("\nHierarchy Dinner took %s\n\n", elapsed)
 }
