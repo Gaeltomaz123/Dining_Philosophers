@@ -87,10 +87,7 @@ void think(philosopher_t *philosopher)
 {
   printf("Philosopher %d started thinking\n", philosopher->position + 1);
   
-  do
-  {
-    sleep(2);
-  } while (getRandomNumber(1, 0));
+  sleep(2);
   
   printf("Philosopher %d stopped thinking\n", philosopher->position + 1);
 }
@@ -99,10 +96,7 @@ void eat(philosopher_t *philosopher)
 {
   printf("Philosopher %d started eating\n", philosopher->position + 1);
   
-  do
-  {
-    sleep(3);
-  } while (getRandomNumber(1, 0));
+  sleep(3);
   
   printf("Philosopher %d stopped eating\n", philosopher->position + 1);
 }
